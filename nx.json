@@ -65,7 +65,8 @@
       "options": {
         "targetName": "lint"
       }
-    }
+    },
+    "@nxrs/cargo"
   ],
   "generators": {
     "@nx/angular:application": {
