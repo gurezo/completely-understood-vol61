@@ -15,7 +15,7 @@
         }
       }
     },
-    "dev": {
+    "serve": {
       "executor": "@nxrs/cargo:run",
       "options": {}
     },
