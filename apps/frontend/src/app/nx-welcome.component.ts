@@ -1,4 +1,5 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-nx-welcome',
@@ -7,4 +8,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
   styles: [],
   encapsulation: ViewEncapsulation.None,
 })
-export class NxWelcomeComponent {}
+export class NxWelcomeComponent {
+  private http = inject(HttpClient);
+}
