@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
         placeholder="Enter a number"
       />
       <button (click)="sendValue()">Send</button>
-      @if (result !== null) {
+      @if (result === null) {
       <p>No Calculate</p>
       } @else {
       <p>Result: {{ result }}</p>
@@ -33,11 +33,11 @@ export class NxWelcomeComponent {
   sendValue() {
     if (this.inputValue !== null) {
       this.http
-        .post<{ doubled_value: number }>('http://127.0.0.1:8080/double', {
+        .post<{ result: number }>('http://127.0.0.1:8080/api/double', {
           value: this.inputValue,
         })
         .subscribe((response) => {
-          this.result = response.doubled_value;
+          this.result = response.result;
         });
     }
   }
