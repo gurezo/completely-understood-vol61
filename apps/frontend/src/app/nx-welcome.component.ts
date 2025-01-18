@@ -1,10 +1,26 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-nx-welcome',
-  imports: [],
-  template: ``,
+  imports: [FormsModule],
+  template: `
+    <div style="text-align: center; margin-top: 50px;">
+      <h1>Double Value App</h1>
+      <input
+        [(ngModel)]="inputValue"
+        type="number"
+        placeholder="Enter a number"
+      />
+      <button (click)="sendValue()">Send</button>
+      @if (result !== null) {
+      <p>No Calculate</p>
+      } @else {
+      <p>Result: {{ result }}</p>
+      }
+    </div>
+  `,
   styles: [],
   encapsulation: ViewEncapsulation.None,
 })
