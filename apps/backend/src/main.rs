@@ -1,5 +1,6 @@
 use actix_web::{web, App, HttpServer, Responder};
 use serde::{Deserialize, Serialize};
+use actix_cors::Cors;
 
 #[derive(Deserialize)]
 struct InputValue {
@@ -20,6 +21,7 @@ async fn double_value(input: web::Json<InputValue>) -> impl Responder {
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
+             .wrap(Cors::default().allow_any_origin().allow_any_method().allow_any_header())
             .service(web::resource("/api/double").route(web::post().to(double_value)))
     })
     .bind("127.0.0.1:8080")?
