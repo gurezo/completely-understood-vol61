@@ -13,4 +13,16 @@ export class NxWelcomeComponent {
 
   inputValue: number | null = null;
   result: number | null = null;
+
+  sendValue() {
+    if (this.inputValue !== null) {
+      this.http
+        .post<{ doubled_value: number }>('http://127.0.0.1:8080/double', {
+          value: this.inputValue,
+        })
+        .subscribe((response) => {
+          this.result = response.doubled_value;
+        });
+    }
+  }
 }
