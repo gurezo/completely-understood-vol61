@@ -10,4 +10,7 @@ import { Component, inject, ViewEncapsulation } from '@angular/core';
 })
 export class NxWelcomeComponent {
   private http = inject(HttpClient);
+
+  inputValue: number | null = null;
+  result: number | null = null;
 }
