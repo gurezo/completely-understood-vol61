@@ -16,6 +16,13 @@ async fn double_value(input: web::Json<InputValue>) -> impl Responder {
     web::Json(OutputValue { result })
 }
 
-fn main() {
-    println!("Hello, world!");
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new()
+            .service(web::resource("/api/double").route(web::post().to(double_value)))
+    })
+    .bind("127.0.0.1:8080")?
+    .run()
+    .await
 }
