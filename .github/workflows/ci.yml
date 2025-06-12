@@ -39,3 +39,8 @@ jobs:
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
       # When you enable task distribution, run the e2e-ci task instead of e2e
       # - run: npx nx affected -t lint test build e2e
+
+      # Nx Cloud を使ってビルドとテストを実行する
+      # - run: npm ci
+      # - run: npx nx affected:build --base=origin/main --parallel
+      # - run: npx nx affected:test  --base=origin/main --parallel

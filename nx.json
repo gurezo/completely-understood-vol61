@@ -75,5 +75,15 @@
       "style": "scss",
       "unitTestRunner": "jest"
     }
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/nx-cloud",
+      "options": {
+        "accessToken": "<YOUR_NX_CLOUD_TOKEN>",
+        "canTrackAnalytics": true,
+        "showUsageWarnings": true
+      }
+    }
   }
 }
