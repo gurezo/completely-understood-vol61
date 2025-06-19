@@ -24,13 +24,23 @@ jobs:
       # Uncomment this line to enable task distribution
       # - run: npx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
 
-      # Cache node_modules
+      # Setup Node.js
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 22
 
-      - run: npm ci --legacy-peer-deps
+      # Setup pnpm
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      # Cache pnpm dependencies
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
       - run: npx cypress install
       - uses: nrwl/nx-set-shas@v4
 
@@ -41,6 +51,6 @@ jobs:
       # - run: npx nx affected -t lint test build e2e
 
       # Nx Cloud を使ってビルドとテストを実行する
-      # - run: npm ci
+      # - run: pnpm install
       # - run: npx nx affected:build --base=origin/main --parallel
       # - run: npx nx affected:test  --base=origin/main --parallel
