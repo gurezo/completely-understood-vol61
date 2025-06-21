@@ -15,7 +15,7 @@
 
 ### 必要なツール
 
-- Node.js 20.x
+- Node.js 22.x
 - Rust (latest stable)
 - Firebase CLI
 - Git
