@@ -6,9 +6,9 @@
 
 ### プロジェクト構成
 
-- **フロントエンド**: Angular 19.2.9 (Firebase Hosting)
+- **フロントエンド**: Angular 20.x (Firebase Hosting)
 - **バックエンド**: Rust + Actix-web (Firebase Functions)
-- **モノレポ管理**: Nx 21.1.3
+- **モノレポ管理**: Nx 21.x
 - **CI/CD**: GitHub Actions + Nx Cloud
 
 ## 前提条件
