@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-nx-welcome',
@@ -33,7 +34,7 @@ export class NxWelcomeComponent {
   sendValue() {
     if (this.inputValue !== null) {
       this.http
-        .post<{ result: number }>('http://127.0.0.1:8080/api/double', {
+        .post<{ result: number }>(`${environment.apiUrl}/double`, {
           value: this.inputValue,
         })
         .subscribe((response) => {
