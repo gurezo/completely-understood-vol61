@@ -37,8 +37,7 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
 
       # ビルド
-      - run: npx nx build frontend --configuration=production
-      - run: npx nx build backend --configuration=production
+      - run: npx nx run-many --target=build --all
 
       # Firebase CLI のインストール
       - run: npm install -g firebase-tools
