@@ -20,7 +20,7 @@ jobs:
       # Node.js のセットアップ
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       # Rust のセットアップ
@@ -29,9 +29,14 @@ jobs:
           toolchain: stable
           override: true
 
+      # Cache pnpm dependencies
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
       # 依存関係のインストール
-      - run: npm ci --legacy-peer-deps
-      - run: npx cypress install
+      - run: pnpm install --frozen-lockfile
 
       # Nx Cloud の設定
       - uses: nrwl/nx-set-shas@v4
