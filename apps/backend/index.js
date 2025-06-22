@@ -30,6 +30,10 @@ function startRustServer() {
       cwd: path.join(__dirname, '..', '..'), // ワークスペースルートをcwdに設定
     });
 
+    rustProcess.stdout.on('data', (data) => {
+      console.log('Rust server stdout:', data.toString());
+    });
+
     rustProcess.stderr.on('data', (data) => {
       console.log('Rust server stderr:', data.toString());
     });
@@ -42,6 +46,10 @@ function startRustServer() {
     rustProcess.on('error', (err) => {
       console.error('Failed to start Rust server:', err);
       reject(err);
+    });
+
+    rustProcess.on('exit', (code, signal) => {
+      console.log(`Rust server exited with code ${code} and signal ${signal}`);
     });
   });
 }
@@ -70,17 +78,33 @@ function sendRequestToRust(data) {
       });
 
       res.on('end', () => {
+        if (res.statusCode !== 200) {
+          reject(
+            new Error(
+              `Rust server returned status ${res.statusCode}: ${responseData}`
+            )
+          );
+          return;
+        }
+
         try {
           const parsedData = JSON.parse(responseData);
           resolve(parsedData);
         } catch (error) {
-          reject(new Error('Invalid JSON response from Rust server'));
+          reject(
+            new Error(`Invalid JSON response from Rust server: ${responseData}`)
+          );
         }
       });
     });
 
     req.on('error', (error) => {
-      reject(error);
+      reject(new Error(`Failed to connect to Rust server: ${error.message}`));
+    });
+
+    req.setTimeout(5000, () => {
+      req.destroy();
+      reject(new Error('Request to Rust server timed out'));
     });
 
     req.write(postData);
@@ -136,6 +160,22 @@ exports.api = functions.https.onRequest(async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     console.error('Function error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Error stack:', error.stack);
+    console.error('Request body:', req.body);
+
+    // エラーの種類に応じて適切なレスポンスを返す
+    if (error.message.includes('Failed to connect to Rust server')) {
+      res
+        .status(503)
+        .json({ error: 'Backend service unavailable', details: error.message });
+    } else if (error.message.includes('timed out')) {
+      res
+        .status(504)
+        .json({ error: 'Request timeout', details: error.message });
+    } else {
+      res
+        .status(500)
+        .json({ error: 'Internal server error', details: error.message });
+    }
   }
 });
