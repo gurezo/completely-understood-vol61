@@ -139,4 +139,67 @@ i  Skipping write of dist/apps/frontend/browser/index.html
 
 ---
 
-firebase emulators:start
+```sh
+➜  completely-understood-vol61 git:(refactor/firebase) ✗ firebase emulators:start
+i  emulators: Starting emulators: functions, hosting, extensions
+⚠  hosting: Port 5000 is not open on localhost (127.0.0.1,::1), could not start Hosting Emulator.
+⚠  hosting: To select a different host/port, specify that host/port in a firebase.json config file:
+      {
+        // ...
+        "emulators": {
+          "hosting": {
+            "host": "HOST",
+            "port": "PORT"
+          }
+        }
+      }
+i  emulators: Shutting down emulators.
+
+Error: Could not start Hosting Emulator, port taken.
+➜  completely-understood-vol61 git:(refactor/firebase) ✗
+
+
+```
+
+---
+
+```diff
+{
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint",
+        "npm --prefix \"$RESOURCE_DIR\" run build"
+      ]
+    }
+  ],
+  "hosting": {
+    "public": "dist/apps/frontend/browser",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "hosting": {
+-      "port": 5000
++      "port": 5002
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  }
+}
+
+
+```
