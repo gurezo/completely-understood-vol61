@@ -223,3 +223,33 @@ api関数内にパスベースのルーティングを実装
 今後も同様の問題が発生した場合は、Firebase Functionsのルーティング設定を確認することをお勧めします。何か他にご質問があれば、お気軽にお聞かせください！
 
 ```
+
+---
+
+functions を nx ワークスペースに追加
+
+```diff
+{
++ "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "esModuleInterop": true,
+    "moduleResolution": "nodenext",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "outDir": "lib",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017"
+  },
+  "compileOnSave": true,
+  "include": [
+    "src"
+  ],
++ "exclude": [
++   "node_modules",
++   "lib"
+  ]
+}
+
+```
