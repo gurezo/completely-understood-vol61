@@ -253,3 +253,14 @@ functions を nx ワークスペースに追加
 }
 
 ```
+
+---
+
+Rust コードの連携と API 疎通確認
+
+```
+2025-07-09 fix: api communication 43848db
+2025-07-09 add fucntiosn for nx workspace abba4b2
+2025-07-10 fix: api communication part 2 bind rust 7138bb3
+
+```
