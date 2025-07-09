@@ -8,12 +8,13 @@
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
+    "deploy:prod": "RUST_BACKEND_URL=https://your-rust-backend-url.com firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
   "engines": {
     "node": "22"
   },
-  "main": "lib/index.js",
+  "main": "lib/functions/src/index.js",
   "dependencies": {
     "cors": "^2.8.5",
     "firebase-admin": "^12.6.0",

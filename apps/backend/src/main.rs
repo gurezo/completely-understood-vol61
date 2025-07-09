@@ -1,4 +1,4 @@
-use actix_web::{web, App, HttpServer, Responder};
+use actix_web::{web, App, HttpServer, Responder, http};
 use serde::{Deserialize, Serialize};
 use actix_cors::Cors;
 
@@ -24,7 +24,7 @@ async fn main() -> std::io::Result<()> {
              .wrap(Cors::default().allow_any_origin().allow_any_method().allow_any_header())
             .service(web::resource("/api/double").route(web::post().to(double_value)))
     })
-    .bind("127.0.0.1:8080")?
+    .bind("0.0.0.0:8080")?
     .run()
     .await
 }
