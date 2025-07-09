@@ -1,15 +1,68 @@
-# CompletelyUnderstoodVol61
+# Completely Understood Vol.61
+
+## CORS 問題の解決
+
+このプロジェクトでは、Firebase Functions とフロントエンド間の CORS 問題を解決しています。
+
+### 解決内容
+
+1. **Firebase Functions 側の CORS 設定**
+
+   - `functions/src/index.ts`に CORS 設定を追加
+   - 許可するオリジン: `localhost:4200`, `127.0.0.1:4200`, `localhost:5002`, `127.0.0.1:5002`
+   - API エンドポイント `/api` を作成（GET/POST 対応）
+
+2. **フロントエンド側の API サービス**
+   - `apps/frontend/src/app/api.service.ts` で API 呼び出しサービスを作成
+   - Angular HttpClient を使用
+   - プロジェクト ID: `completely-understood-vo-a0f23`
+
+### テスト手順
+
+1. **Firebase エミュレーターを起動**
+
+   ```bash
+   firebase emulators:start
+   ```
+
+2. **フロントエンドをビルド**
+
+   ```bash
+   npx nx build frontend
+   ```
+
+3. **ブラウザでアクセス**
+   - http://127.0.0.1:5002 にアクセス
+   - "Get Data" ボタンで GET API をテスト
+   - "Send Data" ボタンで POST API をテスト
+
+### API エンドポイント
+
+- **GET** `http://127.0.0.1:5001/completely-understood-vo-a0f23/us-central1/api`
+- **POST** `http://127.0.0.1:5001/completely-understood-vo-a0f23/us-central1/api`
+
+### 技術スタック
+
+- **バックエンド**: Firebase Functions (Node.js)
+- **フロントエンド**: Angular 17
+- **ビルドツール**: Nx
+- **パッケージマネージャー**: pnpm
+
+### 注意事項
+
+- CORS 設定は開発環境用です。本番環境では適切なドメインを設定してください
+- Firebase Functions のエミュレーターはポート 5001 で動作します
+- Firebase Hosting のエミュレーターはポート 5002 で動作します
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
 ✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
 
 ## Finish your CI setup
 
 [Click here to finish setting up your workspace!](https://cloud.nx.app/connect/EsyOMFqFlB)
-
 
 ## Run tasks
 
@@ -57,7 +110,6 @@ You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx 
 
 [Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
-
 [Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
 ## Install Nx Console
@@ -70,12 +122,13 @@ Nx Console is an editor extension that enriches your developer experience. It le
 
 Learn more:
 
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
+- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 - [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 - [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 - [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
 And join the Nx community:
+
 - [Discord](https://go.nx.dev/community)
 - [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
 - [Our Youtube channel](https://www.youtube.com/@nxdevtools)

@@ -1,0 +1,171 @@
+[debug] [2025-07-09T13:21:54.600Z] ----------------------------------------------------------------------
+[debug] [2025-07-09T13:21:54.601Z] Command:       /Users/akihiko.kigure/.nodebrew/node/v22.17.0/bin/node /Users/akihiko.kigure/.npm-global/bin/firebase emulators:start
+[debug] [2025-07-09T13:21:54.601Z] CLI Version:   14.9.0
+[debug] [2025-07-09T13:21:54.601Z] Platform:      darwin
+[debug] [2025-07-09T13:21:54.601Z] Node Version:  v22.17.0
+[debug] [2025-07-09T13:21:54.602Z] Time:          Wed Jul 09 2025 22:21:54 GMT+0900 (日本標準時)
+[debug] [2025-07-09T13:21:54.602Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-09T13:21:54.682Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-07-09T13:21:54.682Z] > authorizing via signed-in user (akihiko.kigure@gmail.com)
+[info] i  emulators: Starting emulators: functions, hosting, extensions {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: functions, hosting, extensions"}}
+[debug] [2025-07-09T13:21:54.684Z] Checked if tokens are valid: true, expires at: 1752069969563
+[debug] [2025-07-09T13:21:54.684Z] Checked if tokens are valid: true, expires at: 1752069969563
+[debug] [2025-07-09T13:21:54.684Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/completely-understood-vo-a0f23 [none]
+[debug] [2025-07-09T13:21:55.490Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/completely-understood-vo-a0f23 200
+[debug] [2025-07-09T13:21:55.490Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/completely-understood-vo-a0f23 {"projectNumber":"728967511901","projectId":"completely-understood-vo-a0f23","lifecycleState":"ACTIVE","name":"completely-understood-vol61","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-06-22T04:28:09.175407Z"}
+[debug] [2025-07-09T13:21:55.810Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-07-09T13:21:55.811Z] [hosting] Hosting Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-07-09T13:21:55.811Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"hosting":[{"address":"127.0.0.1","family":"IPv4","port":5002}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2025-07-09T13:21:55.813Z] [hub] writing locator at /var/folders/fb/ww70j2nn1nv5l6x_663nnlfh0000gn/T/hub-completely-understood-vo-a0f23.json
+[debug] [2025-07-09T13:21:55.814Z] [Extensions] Started Extensions emulator, this is a noop.
+[debug] [2025-07-09T13:21:56.054Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-07-09T13:21:56.054Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-07-09T13:21:56.054Z] [tasks] Cloud Tasks Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-07-09T13:21:56.054Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"hosting":[{"address":"127.0.0.1","family":"IPv4","port":5002}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}],"tasks":[{"address":"127.0.0.1","family":"IPv4","port":9499}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] ⚠  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: apphosting, auth, firestore, database, pubsub, storage, dataconnect {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mapphosting, auth, firestore, database, pubsub, storage, dataconnect\u001b[22m"}}
+[debug] [2025-07-09T13:21:56.058Z] defaultcredentials: writing to file /Users/akihiko.kigure/.config/firebase/akihiko_kigure_gmail.com_application_default_credentials.json
+[debug] [2025-07-09T13:21:56.058Z] Setting GAC to /Users/akihiko.kigure/.config/firebase/akihiko_kigure_gmail.com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to /Users/akihiko.kigure/.config/firebase/akihiko_kigure_gmail.com_application_default_credentials.json"}}
+[debug] [2025-07-09T13:21:56.059Z] Checked if tokens are valid: true, expires at: 1752069969563
+[debug] [2025-07-09T13:21:56.059Z] Checked if tokens are valid: true, expires at: 1752069969563
+[debug] [2025-07-09T13:21:56.059Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/completely-understood-vo-a0f23/adminSdkConfig [none]
+[debug] [2025-07-09T13:21:56.460Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/completely-understood-vo-a0f23/adminSdkConfig 200
+[debug] [2025-07-09T13:21:56.460Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/completely-understood-vo-a0f23/adminSdkConfig {"projectId":"completely-understood-vo-a0f23","storageBucket":"completely-understood-vo-a0f23.firebasestorage.app"}
+[debug] [2025-07-09T13:21:56.484Z] Checked if tokens are valid: true, expires at: 1752069969563
+[debug] [2025-07-09T13:21:56.484Z] Checked if tokens are valid: true, expires at: 1752069969563
+[debug] [2025-07-09T13:21:56.484Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/completely-understood-vo-a0f23/sites 
+[debug] [2025-07-09T13:21:57.244Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/completely-understood-vo-a0f23/sites 200
+[debug] [2025-07-09T13:21:57.244Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/completely-understood-vo-a0f23/sites {"sites":[{"name":"projects/completely-understood-vo-a0f23/sites/completely-understood-vo-a0f23","defaultUrl":"https://completely-understood-vo-a0f23.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2025-07-09T13:21:57.244Z] Checked if tokens are valid: true, expires at: 1752069969563
+[debug] [2025-07-09T13:21:57.244Z] Checked if tokens are valid: true, expires at: 1752069969563
+[debug] [2025-07-09T13:21:57.245Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/completely-understood-vo-a0f23/webApps/-/config [none]
+[debug] [2025-07-09T13:21:57.635Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/completely-understood-vo-a0f23/webApps/-/config 200
+[debug] [2025-07-09T13:21:57.635Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/completely-understood-vo-a0f23/webApps/-/config {"projectId":"completely-understood-vo-a0f23","storageBucket":"completely-understood-vo-a0f23.firebasestorage.app","apiKey":"AIzaSyAFOd98YQ9WtI9PrdMbTpYc04psmrCeQrQ","authDomain":"completely-understood-vo-a0f23.firebaseapp.com","messagingSenderId":"728967511901"}
+[debug] [2025-07-09T13:21:57.646Z] Checked if tokens are valid: true, expires at: 1752069969563
+[debug] [2025-07-09T13:21:57.647Z] Checked if tokens are valid: true, expires at: 1752069969563
+[debug] [2025-07-09T13:21:57.647Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/completely-understood-vo-a0f23 [none]
+[debug] [2025-07-09T13:21:57.918Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/completely-understood-vo-a0f23 200
+[debug] [2025-07-09T13:21:57.918Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/completely-understood-vo-a0f23 {"projectId":"completely-understood-vo-a0f23","projectNumber":"728967511901","displayName":"completely-understood-vol61","name":"projects/completely-understood-vo-a0f23","resources":{"hostingSite":"completely-understood-vo-a0f23"},"state":"ACTIVE","etag":"1_62034fbc-ea05-4eef-9466-e63e29fa3889"}
+[info] i  hosting[completely-understood-vo-a0f23]: Serving hosting files from: dist/apps/frontend/browser {"metadata":{"emulator":{"name":"hosting"},"message":"Serving hosting files from: \u001b[1mdist/apps/frontend/browser\u001b[22m"}}
+[info] ✔  hosting[completely-understood-vo-a0f23]: Local server: http://127.0.0.1:5002 {"metadata":{"emulator":{"name":"hosting"},"message":"Local server: \u001b[4m\u001b[1mhttp://127.0.0.1:5002\u001b[22m\u001b[24m"}}
+[debug] [2025-07-09T13:21:58.001Z] [Extensions] Connecting Extensions emulator, this is a noop.
+[info] i  functions: Watching "/Users/akihiko.kigure/work/completely-understood-vol61/functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"/Users/akihiko.kigure/work/completely-understood-vol61/functions\" for Cloud Functions..."}}
+[debug] [2025-07-09T13:21:58.004Z] Validating nodejs source
+[debug] [2025-07-09T13:21:58.275Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^5.7.3"
+  },
+  "private": true
+}
+[debug] [2025-07-09T13:21:58.275Z] Building nodejs source
+[debug] [2025-07-09T13:21:58.275Z] Failed to find version of module node: reached end of search path /Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules
+[info] ✔  functions: Using node@22 from host. 
+[debug] [2025-07-09T13:21:58.276Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-07-09T13:21:58.280Z] Found firebase-functions binary at '/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8524
+
+[debug] [2025-07-09T13:21:58.415Z] Got response from /__/functions.yaml {"endpoints":{"double":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":10,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"double"},"api":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":10,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"api"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[debug] [2025-07-09T13:22:02.438Z] defaultcredentials: writing to file /Users/akihiko.kigure/.config/firebase/akihiko_kigure_gmail.com_application_default_credentials.json
+[debug] [2025-07-09T13:22:02.439Z] Setting GAC to /Users/akihiko.kigure/.config/firebase/akihiko_kigure_gmail.com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to /Users/akihiko.kigure/.config/firebase/akihiko_kigure_gmail.com_application_default_credentials.json"}}
+[info] ✔  functions: Loaded functions definitions from source: double, api. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: double, api."}}
+[info] ✔  functions[us-central1-double]: http function initialized (http://127.0.0.1:5001/completely-understood-vo-a0f23/us-central1/double). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/completely-understood-vo-a0f23/us-central1/double)."}}
+[info] ✔  functions[us-central1-api]: http function initialized (http://127.0.0.1:5001/completely-understood-vo-a0f23/us-central1/api). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/completely-understood-vo-a0f23/us-central1/api)."}}
+[debug] [2025-07-09T13:22:02.445Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────┬────────────────┬──────────────────────────────────┐
+│ Emulator   │ Host:Port      │ View in Emulator UI              │
+├────────────┼────────────────┼──────────────────────────────────┤
+│ Functions  │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions  │
+├────────────┼────────────────┼──────────────────────────────────┤
+│ Hosting    │ 127.0.0.1:5002 │ n/a                              │
+├────────────┼────────────────┼──────────────────────────────────┤
+│ Extensions │ 127.0.0.1:5001 │ http://127.0.0.1:4000/extensions │
+└────────────┴────────────────┴──────────────────────────────────┘
+  Emulator Hub host: 127.0.0.1 port: 4400
+  Other reserved ports: 4500
+┌─────────────────────────┬───────────────┬─────────────────────┐
+│ Extension Instance Name │ Extension Ref │ View in Emulator UI │
+└─────────────────────────┴───────────────┴─────────────────────┘
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[info] i  hosting: 127.0.0.1 - - [09/Jul/2025:13:22:04 +0000] "GET / HTTP/1.1" 200 501 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [09/Jul/2025:13:22:04 +0000] \"GET / HTTP/1.1\" 200 501 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [09/Jul/2025:13:22:04 +0000] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 187 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [09/Jul/2025:13:22:04 +0000] \"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1\" 404 187 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [09/Jul/2025:13:22:04 +0000] "GET /styles-5INURTSO.css HTTP/1.1" 200 - "http://127.0.0.1:5002/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [09/Jul/2025:13:22:04 +0000] \"GET /styles-5INURTSO.css HTTP/1.1\" 200 - \"http://127.0.0.1:5002/\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [09/Jul/2025:13:22:04 +0000] "GET /polyfills-HGDOEU5L.js HTTP/1.1" 200 - "http://127.0.0.1:5002/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [09/Jul/2025:13:22:04 +0000] \"GET /polyfills-HGDOEU5L.js HTTP/1.1\" 200 - \"http://127.0.0.1:5002/\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36\""}}
+[info] i  hosting: 127.0.0.1 - - [09/Jul/2025:13:22:04 +0000] "GET /main-KOMRB7PA.js HTTP/1.1" 200 - "http://127.0.0.1:5002/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [09/Jul/2025:13:22:04 +0000] \"GET /main-KOMRB7PA.js HTTP/1.1\" 200 - \"http://127.0.0.1:5002/\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36\""}}
+[debug] [2025-07-09T13:22:07.451Z] [work-queue] {"queuedWork":["/completely-understood-vo-a0f23/us-central1/api/double-2025-07-09T13:22:07.451Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-07-09T13:22:07.451Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/completely-understood-vo-a0f23/us-central1/api/double-2025-07-09T13:22:07.451Z"],"workRunningCount":1}
+[debug] [2025-07-09T13:22:07.451Z] Accepted request OPTIONS /completely-understood-vo-a0f23/us-central1/api/double --> us-central1-api
+[debug] [2025-07-09T13:22:07.452Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2025-07-09T13:22:07.453Z] [functions] Got req.url=/completely-understood-vo-a0f23/us-central1/api/double, mapping to path=/double {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/completely-understood-vo-a0f23/us-central1/api/double, mapping to path=/double"}}
+[debug] [2025-07-09T13:22:07.456Z] [worker-pool] addWorker(us-central1-api) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-api)"}}
+[debug] [2025-07-09T13:22:07.457Z] [worker-pool] Adding worker with key us-central1-api, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-api, total=1"}}
+[debug] [2025-07-09T13:22:07.687Z] [runtime-status] [69047] Resolved module firebase-admin {"declared":true,"installed":true,"version":"12.7.0","resolution":"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-admin@12.7.0/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[runtime-status] [69047] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"12.7.0\",\"resolution\":\"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-admin@12.7.0/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2025-07-09T13:22:07.687Z] [runtime-status] [69047] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.2","resolution":"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-functions@6.3.2_firebase-admin@12.7.0/node_modules/firebase-functions/lib/v2/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[runtime-status] [69047] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"6.3.2\",\"resolution\":\"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-functions@6.3.2_firebase-admin@12.7.0/node_modules/firebase-functions/lib/v2/index.js\"}"}}
+[debug] [2025-07-09T13:22:07.687Z] [runtime-status] [69047] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[runtime-status] [69047] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2025-07-09T13:22:07.688Z] [runtime-status] [69047] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.2","resolution":"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-functions@6.3.2_firebase-admin@12.7.0/node_modules/firebase-functions/lib/v2/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[runtime-status] [69047] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"6.3.2\",\"resolution\":\"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-functions@6.3.2_firebase-admin@12.7.0/node_modules/firebase-functions/lib/v2/index.js\"}"}}
+[debug] [2025-07-09T13:22:07.745Z] [runtime-status] [69047] Checked functions.config() {"config":{}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[runtime-status] [69047] Checked functions.config() {\"config\":{}}"}}
+[debug] [2025-07-09T13:22:07.746Z] [runtime-status] [69047] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"6.3.2","resolution":"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-functions@6.3.2_firebase-admin@12.7.0/node_modules/firebase-functions/lib/v2/index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[runtime-status] [69047] firebase-functions has been stubbed. {\"functionsResolution\":{\"declared\":true,\"installed\":true,\"version\":\"6.3.2\",\"resolution\":\"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-functions@6.3.2_firebase-admin@12.7.0/node_modules/firebase-functions/lib/v2/index.js\"}}"}}
+[debug] [2025-07-09T13:22:07.746Z] [runtime-status] [69047] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.2","resolution":"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-functions@6.3.2_firebase-admin@12.7.0/node_modules/firebase-functions/lib/v2/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[runtime-status] [69047] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"6.3.2\",\"resolution\":\"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-functions@6.3.2_firebase-admin@12.7.0/node_modules/firebase-functions/lib/v2/index.js\"}"}}
+[debug] [2025-07-09T13:22:07.746Z] [runtime-status] [69047] Resolved module firebase-admin {"declared":true,"installed":true,"version":"12.7.0","resolution":"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-admin@12.7.0/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[runtime-status] [69047] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"12.7.0\",\"resolution\":\"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-admin@12.7.0/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2025-07-09T13:22:07.747Z] [runtime-status] [69047] Resolved module firebase-functions {"declared":true,"installed":true,"version":"6.3.2","resolution":"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-functions@6.3.2_firebase-admin@12.7.0/node_modules/firebase-functions/lib/v2/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[runtime-status] [69047] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"6.3.2\",\"resolution\":\"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-functions@6.3.2_firebase-admin@12.7.0/node_modules/firebase-functions/lib/v2/index.js\"}"}}
+[debug] [2025-07-09T13:22:07.747Z] [runtime-status] [69047] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"12.7.0","resolution":"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-admin@12.7.0/node_modules/firebase-admin/lib/index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[runtime-status] [69047] firebase-admin has been stubbed. {\"adminResolution\":{\"declared\":true,\"installed\":true,\"version\":\"12.7.0\",\"resolution\":\"/Users/akihiko.kigure/work/completely-understood-vol61/functions/node_modules/.pnpm/firebase-admin@12.7.0/node_modules/firebase-admin/lib/index.js\"}}"}}
+[debug] [2025-07-09T13:22:07.749Z] [runtime-status] [69047] Functions runtime initialized. {"cwd":"/Users/akihiko.kigure/work/completely-understood-vol61/functions","node_version":"22.17.0"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[runtime-status] [69047] Functions runtime initialized. {\"cwd\":\"/Users/akihiko.kigure/work/completely-understood-vol61/functions\",\"node_version\":\"22.17.0\"}"}}
+[debug] [2025-07-09T13:22:07.749Z] [runtime-status] [69047] Listening to port: /var/folders/fb/ww70j2nn1nv5l6x_663nnlfh0000gn/T/fire_emu_8022bf0887e18dbe.sock {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[runtime-status] [69047] Listening to port: /var/folders/fb/ww70j2nn1nv5l6x_663nnlfh0000gn/T/fire_emu_8022bf0887e18dbe.sock"}}
+[debug] [2025-07-09T13:22:07.763Z] [worker-us-central1-api-f04b4f06-4180-47df-80b8-f081fa3aa69a]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[worker-us-central1-api-f04b4f06-4180-47df-80b8-f081fa3aa69a]: IDLE"}}
+[debug] [2025-07-09T13:22:07.763Z] [worker-pool] submitRequest(triggerId=us-central1-api) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-api)"}}
+[info] i  functions: Beginning execution of "us-central1-api" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"Beginning execution of \"us-central1-api\""}}
+[debug] [2025-07-09T13:22:07.763Z] [worker-us-central1-api-f04b4f06-4180-47df-80b8-f081fa3aa69a]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[worker-us-central1-api-f04b4f06-4180-47df-80b8-f081fa3aa69a]: BUSY"}}
+[debug] [2025-07-09T13:22:07.764Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"Finishing up request with event=pause"}}
+[info] i  functions: Finished "us-central1-api" in 1.125542ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"Finished \"us-central1-api\" in 1.125542ms"}}
+[debug] [2025-07-09T13:22:07.765Z] [worker-us-central1-api-f04b4f06-4180-47df-80b8-f081fa3aa69a]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[worker-us-central1-api-f04b4f06-4180-47df-80b8-f081fa3aa69a]: IDLE"}}
+[debug] [2025-07-09T13:22:07.765Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"Finishing up request with event=finish"}}
+[debug] [2025-07-09T13:22:07.765Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2025-07-09T13:22:07.765Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-07-09T13:22:07.766Z] [work-queue] {"queuedWork":["/completely-understood-vo-a0f23/us-central1/api/double-2025-07-09T13:22:07.766Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-07-09T13:22:07.766Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/completely-understood-vo-a0f23/us-central1/api/double-2025-07-09T13:22:07.766Z"],"workRunningCount":1}
+[debug] [2025-07-09T13:22:07.766Z] Accepted request POST /completely-understood-vo-a0f23/us-central1/api/double --> us-central1-api
+[debug] [2025-07-09T13:22:07.766Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2025-07-09T13:22:07.766Z] [functions] Got req.url=/completely-understood-vo-a0f23/us-central1/api/double, mapping to path=/double {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/completely-understood-vo-a0f23/us-central1/api/double, mapping to path=/double"}}
+[debug] [2025-07-09T13:22:07.766Z] [worker-pool] submitRequest(triggerId=us-central1-api) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-api)"}}
+[info] i  functions: Beginning execution of "us-central1-api" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"Beginning execution of \"us-central1-api\""}}
+[debug] [2025-07-09T13:22:07.766Z] [worker-us-central1-api-f04b4f06-4180-47df-80b8-f081fa3aa69a]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[worker-us-central1-api-f04b4f06-4180-47df-80b8-f081fa3aa69a]: BUSY"}}
+[info] >  {"structuredData":true,"severity":"INFO","message":"API called!"} {"user":{"structuredData":true,"severity":"INFO","message":"API called!"},"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"\u001b[90m> \u001b[39m {\"structuredData\":true,\"severity\":\"INFO\",\"message\":\"API called!\"}"}}
+[debug] [2025-07-09T13:22:07.769Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"Finishing up request with event=pause"}}
+[info] i  functions: Finished "us-central1-api" in 3.230083ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"Finished \"us-central1-api\" in 3.230083ms"}}
+[debug] [2025-07-09T13:22:07.769Z] [worker-us-central1-api-f04b4f06-4180-47df-80b8-f081fa3aa69a]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"[worker-us-central1-api-f04b4f06-4180-47df-80b8-f081fa3aa69a]: IDLE"}}
+[debug] [2025-07-09T13:22:07.769Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"Finishing up request with event=finish"}}
+[debug] [2025-07-09T13:22:07.769Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2025-07-09T13:22:07.769Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[info] >  {"input":444,"result":888,"severity":"INFO","message":"Double calculation completed"} {"user":{"input":444,"result":888,"severity":"INFO","message":"Double calculation completed"},"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-api"},"extension":{},"message":"\u001b[90m> \u001b[39m {\"input\":444,\"result\":888,\"severity\":\"INFO\",\"message\":\"Double calculation completed\"}"}}
