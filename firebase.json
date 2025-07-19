@@ -1,31 +1,10 @@
 {
   "hosting": {
     "public": "dist/apps/frontend/browser",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
     ]
-  },
-  "functions": {
-    "source": "apps/backend",
-    "runtime": "nodejs20"
-  },
-  "emulators": {
-    "auth": {
-      "port": 9099
-    },
-    "functions": {
-      "port": 5001
-    },
-    "hosting": {
-      "port": 5002
-    },
-    "ui": {
-      "enabled": true,
-      "port": 4000
-    }
   }
 }
