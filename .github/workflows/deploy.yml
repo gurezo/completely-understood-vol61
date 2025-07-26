@@ -2,7 +2,7 @@ name: Deploy to Firebase
 
 on:
   push:
-    branches: [main]
+    branches: [main, feature/deploy-frontend]
   pull_request:
     branches: [main]
 
