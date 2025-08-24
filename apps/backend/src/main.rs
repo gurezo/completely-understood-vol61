@@ -1,4 +1,4 @@
-use actix_web::{web, App, HttpServer, Responder};
+use actix_web::{web, App, HttpServer, Responder, http};
 use serde::{Deserialize, Serialize};
 use actix_cors::Cors;
 
@@ -26,7 +26,16 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
-             .wrap(Cors::default().allow_any_origin().allow_any_method().allow_any_header())
+            .wrap(
+                Cors::default()
+                    .allowed_origin("http://127.0.0.1:5002")
+                    .allowed_origin("http://localhost:5002")
+                    .allowed_origin("http://127.0.0.1:4200")
+                    .allowed_origin("http://localhost:4200")
+                    .allowed_methods(vec!["GET", "POST", "PUT", "DELETE", "OPTIONS"])
+                    .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT, http::header::CONTENT_TYPE])
+                    .supports_credentials()
+            )
             .service(web::resource("/api/double").route(web::post().to(double_value)))
     })
     .bind(bind_address)?
