@@ -19,12 +19,17 @@ async fn double_value(input: web::Json<InputValue>) -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let port = std::env::var("PORT").unwrap_or_else(|_| "8080".to_string());
+    let bind_address = format!("0.0.0.0:{}", port);
+
+    println!("Starting server on {}", bind_address);
+
     HttpServer::new(|| {
         App::new()
              .wrap(Cors::default().allow_any_origin().allow_any_method().allow_any_header())
             .service(web::resource("/api/double").route(web::post().to(double_value)))
     })
-    .bind("0.0.0.0:8080")?
+    .bind(bind_address)?
     .run()
     .await
 }
