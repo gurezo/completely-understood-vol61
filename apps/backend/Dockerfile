@@ -19,7 +19,7 @@ RUN cargo build --release -p backend
 FROM gcr.io/distroless/cc-debian12
 WORKDIR /app
 # 出力バイナリ名は Cargo.toml の package.name に合わせる
-COPY --from=builder /usr/src/app/target/release/backend /app/server
+COPY --from=builder /usr/src/app/target/release/backend /app/backend
 ENV PORT=8080
 EXPOSE 8080
-CMD ["/app/server"]
+CMD ["/app/backend"]
