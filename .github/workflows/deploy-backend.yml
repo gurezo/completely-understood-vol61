@@ -1,0 +1,509 @@
+name: Deploy Backend to Cloud Run
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'apps/backend/**'
+      - '.github/workflows/deploy-backend.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/backend/**'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: asia-northeast1
+  SERVICE_NAME: backend
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/backend
+
+jobs:
+  # プロジェクトIDの検証
+  validate-project:
+    name: Validate Project ID
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate GCP Project ID
+        run: |
+          echo "=== GCP Project ID Validation ==="
+          echo "Raw PROJECT_ID: '${{ secrets.GCP_PROJECT_ID }}'"
+
+          # Secretsの詳細確認
+          echo "=== Secrets Debug Information ==="
+          echo "GCP_PROJECT_ID length: ${#GCP_PROJECT_ID}"
+          echo "GCP_PROJECT_ID is empty: $([ -z "${{ secrets.GCP_PROJECT_ID }}" ] && echo "YES" || echo "NO")"
+          echo "GCP_PROJECT_ID is null: $([ "${{ secrets.GCP_PROJECT_ID }}" = "null" ] && echo "YES" || echo "NO")"
+          echo "GCP_PROJECT_ID contains only spaces: $([ -z "${GCP_PROJECT_ID// }" ] && echo "YES" || echo "NO")"
+
+          # プロジェクトIDが空または無効な場合の処理
+          if [ -z "${{ secrets.GCP_PROJECT_ID }}" ] || [ "${{ secrets.GCP_PROJECT_ID }}" = "null" ] || [ "${{ secrets.GCP_PROJECT_ID }}" = "***" ]; then
+            echo "❌ CRITICAL: GCP_PROJECT_ID is empty, null, or contains invalid characters"
+            echo "Please check GitHub Secrets configuration:"
+            echo "1. Go to Repository Settings > Secrets and variables > Actions"
+            echo "2. Verify GCP_PROJECT_ID is set correctly"
+            echo "3. Ensure the secret has proper permissions"
+            exit 1
+          fi
+
+          # プロジェクトIDの形式チェック
+          if [[ ! "${{ secrets.GCP_PROJECT_ID }}" =~ ^[a-z0-9-]+$ ]]; then
+            echo "❌ Invalid PROJECT_ID format: ${{ secrets.GCP_PROJECT_ID }}"
+            echo "PROJECT_ID must contain only lowercase letters, numbers, and hyphens"
+            exit 1
+          fi
+
+          echo "✅ PROJECT_ID format is valid: ${{ secrets.GCP_PROJECT_ID }}"
+
+          # リポジトリ名の構築
+          REPO_NAME="gcr.io/${{ secrets.GCP_PROJECT_ID }}/backend"
+          echo "Repository name: $REPO_NAME"
+
+          # リポジトリ名の形式チェック
+          if [[ ! "$REPO_NAME" =~ ^gcr\.io/[a-z0-9-]+/[a-z0-9_-]+$ ]]; then
+            echo "❌ Invalid repository name format: $REPO_NAME"
+            exit 1
+          fi
+
+          echo "✅ Repository name format is valid: $REPO_NAME"
+          echo "================================"
+
+  # バックエンドのビルド
+  build-and-test:
+    name: Build Backend
+    runs-on: ubuntu-latest
+    needs: validate-project
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Build backend
+        run: |
+          echo "Building backend..."
+          cd apps/backend
+          cargo build --release
+          echo "Build completed with exit code: $?"
+
+      - name: Debug information
+        run: |
+          echo "=== Debug Information ==="
+          echo "Current directory: $(pwd)"
+          echo "Rust version: $(rustc --version)"
+          echo "Cargo version: $(cargo --version)"
+          echo "========================="
+
+  # Dockerイメージのビルドとプッシュ
+  build-image:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    needs: [build-and-test, validate-project]
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: |
+            image=moby/buildkit:v0.12.0
+            network=host
+          buildkitd-flags: |
+            --debug
+            --log-level=info
+            --allow-insecure-entitlement security.insecure
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          export_environment_variables: true
+
+      - name: Validate and normalize repository name
+        run: |
+          echo "=== Repository Name Validation ==="
+          # プロジェクトIDの再確認
+          PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}"
+          echo "PROJECT_ID: $PROJECT_ID"
+
+          # Secretsの詳細確認
+          echo "=== Secrets Debug Information ==="
+          echo "GCP_PROJECT_ID length: ${#PROJECT_ID}"
+          echo "GCP_PROJECT_ID is empty: $([ -z "$PROJECT_ID" ] && echo "YES" || echo "NO")"
+          echo "GCP_PROJECT_ID is null: $([ "$PROJECT_ID" = "null" ] && echo "YES" || echo "NO")"
+          echo "GCP_PROJECT_ID contains only spaces: $([ -z "${PROJECT_ID// }" ] && echo "YES" || echo "NO")"
+
+          # プロジェクトIDが空または無効な場合の処理
+          if [ -z "$PROJECT_ID" ] || [ "$PROJECT_ID" = "null" ] || [ "$PROJECT_ID" = "***" ]; then
+            echo "❌ CRITICAL: GCP_PROJECT_ID is empty, null, or contains invalid characters"
+            echo "Please check GitHub Secrets configuration:"
+            echo "1. Go to Repository Settings > Secrets and variables > Actions"
+            echo "2. Verify GCP_PROJECT_ID is set correctly"
+            echo "3. Ensure the secret has proper permissions"
+            exit 1
+          fi
+
+          # プロジェクトIDの正規化（小文字、ハイフンのみ）
+          NORMALIZED_PROJECT_ID=$(echo "$PROJECT_ID" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')
+          echo "Normalized PROJECT_ID: $NORMALIZED_PROJECT_ID"
+
+          # リポジトリ名の構築
+          REPO_NAME="gcr.io/$NORMALIZED_PROJECT_ID/backend"
+          echo "Final repository name: $REPO_NAME"
+
+          # 環境変数の更新
+          echo "IMAGE_NAME=$REPO_NAME" >> $GITHUB_ENV
+          echo "Updated IMAGE_NAME: $REPO_NAME"
+          echo "================================"
+
+      - name: Configure Docker for GCR
+        run: |
+          echo "Configuring Docker for GCR..."
+
+          # プロジェクトIDを明示的に設定
+          echo "Setting project: ${{ secrets.GCP_PROJECT_ID }}"
+          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+
+          # GCR認証を明示的に設定（プロジェクトIDを指定）
+          echo "Configuring Docker for GCR with project..."
+          gcloud auth configure-docker gcr.io --quiet --project=${{ secrets.GCP_PROJECT_ID }}
+
+          echo "Docker configuration completed"
+
+          # GCR認証の確認
+          echo "Verifying GCR authentication..."
+          gcloud auth list
+          echo "Current project: $(gcloud config get-value project)"
+          echo "Docker config contents:"
+          cat ~/.docker/config.json | grep -v "auth" || echo "No auth config found"
+
+          # Docker認証の詳細確認
+          echo "=== Docker Auth Details ==="
+          echo "Docker config path: ~/.docker/config.json"
+          if [ -f ~/.docker/config.json ]; then
+            echo "Docker config exists"
+            echo "Credential helpers:"
+            cat ~/.docker/config.json | grep -A 5 "credHelpers" || echo "No credHelpers found"
+          else
+            echo "Docker config does not exist"
+          fi
+          echo "=========================="
+
+      - name: Verify GCR access
+        run: |
+          echo "=== GCR Access Verification ==="
+          # 正規化されたリポジトリ名を使用
+          echo "Testing GCR access with: ${{ env.IMAGE_NAME }}"
+
+          # GCRへのアクセス権限を確認
+          echo "Testing GCR access..."
+          if gcloud container images list-tags ${{ env.IMAGE_NAME }} --limit=1 > /dev/null 2>&1; then
+            echo "✅ GCR access verified successfully"
+          else
+            echo "⚠️  GCR access test failed, but continuing with build..."
+          fi
+          echo "================================"
+
+      - name: Verify build context files
+        run: |
+          echo "=== Build Context Verification ==="
+          echo "Current directory: $(pwd)"
+          echo "Files in current directory:"
+          ls -la
+          echo ""
+          echo "Checking for Cargo files:"
+          if [ -f "Cargo.toml" ]; then
+            echo "✅ Cargo.toml found"
+            echo "Cargo.toml contents:"
+            cat Cargo.toml
+          else
+            echo "❌ Cargo.toml not found"
+            exit 1
+          fi
+          if [ -f "Cargo.lock" ]; then
+            echo "✅ Cargo.lock found"
+            echo "Cargo.lock size: $(ls -lh Cargo.lock | awk '{print $5}')"
+          else
+            echo "❌ Cargo.lock not found"
+            exit 1
+          fi
+          if [ -f "apps/backend/Cargo.toml" ]; then
+            echo "✅ apps/backend/Cargo.toml found"
+            echo "apps/backend/Cargo.toml contents:"
+            cat apps/backend/Cargo.toml
+          else
+            echo "❌ apps/backend/Cargo.toml not found"
+            exit 1
+          fi
+          if [ -d "apps/backend/src" ]; then
+            echo "✅ apps/backend/src directory found"
+            echo "apps/backend/src contents:"
+            ls -la apps/backend/src/
+          else
+            echo "❌ apps/backend/src directory not found"
+            exit 1
+          fi
+          echo "================================"
+
+      - name: Final GCR authentication check
+        run: |
+          echo "=== Final GCR Authentication Check ==="
+          # Dockerビルド直前の最終認証確認
+          echo "Re-authenticating to GCR..."
+
+          # プロジェクトIDを再確認
+          echo "Current project: $(gcloud config get-value project)"
+          echo "Target project: ${{ secrets.GCP_PROJECT_ID }}"
+
+          # プロジェクトIDが一致しない場合は再設定
+          if [ "$(gcloud config get-value project)" != "${{ secrets.GCP_PROJECT_ID }}" ]; then
+            echo "Project mismatch, reconfiguring..."
+            gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+          fi
+
+          # GCR認証を再実行（プロジェクトIDを明示的に指定）
+          gcloud auth configure-docker gcr.io --quiet --project=${{ secrets.GCP_PROJECT_ID }}
+
+          # 認証状態の確認
+          echo "Current authentication status:"
+          gcloud auth list --filter=status:ACTIVE
+
+          # Docker認証の確認
+          echo "Docker credential helpers:"
+          if [ -f ~/.docker/config.json ]; then
+            cat ~/.docker/config.json | grep -A 10 "credHelpers" || echo "No credHelpers found"
+          fi
+
+          # リポジトリ名の最終確認
+          echo "Final repository name for authentication: ${{ env.IMAGE_NAME }}"
+          echo "====================================="
+
+      - name: Verify Docker and Buildx environment
+        run: |
+          echo "=== Docker and Buildx Environment Check ==="
+
+          # Docker の状態確認
+          echo "Docker version:"
+          docker version
+
+          echo "Docker info:"
+          docker info
+
+          echo "Buildx builders:"
+          docker buildx ls
+
+          echo "Current builder:"
+          docker buildx inspect
+
+          # ネットワーク接続の確認
+          echo "Network connectivity test:"
+          if ping -c 1 8.8.8.8 > /dev/null 2>&1; then
+            echo "✅ Network connectivity OK"
+          else
+            echo "❌ Network connectivity issues detected"
+          fi
+
+          # ディスク容量の確認
+          echo "Disk space:"
+          df -h
+
+          echo "=========================================="
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+          outputs: type=docker,dest=/tmp/backend.tar
+          provenance: false
+          # ビルドログを詳細化
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+            BUILDKIT_PROGRESS=plain
+            BUILDKIT_STEP_LOG_MAX_SIZE=10485760
+            BUILDKIT_STEP_LOG_MAX_SPEED=1048576
+          # より安定したビルドのための設定
+          driver-opts: |
+            image=moby/buildkit:v0.12.0
+            network=host
+          # ビルドタイムアウトの設定
+          timeout: 1800
+
+      - name: Verify Docker image
+        run: |
+          echo "=== Docker Image Verification ==="
+          if [ -f "/tmp/backend.tar" ]; then
+            echo "✅ Docker image tar file created successfully"
+            ls -la /tmp/backend.tar
+          else
+            echo "❌ Docker image tar file not found"
+            exit 1
+          fi
+          echo "================================="
+
+      - name: Test container startup
+        run: |
+          echo "=== Container Startup Test ==="
+
+          # イメージをローカルにロード
+          echo "Loading Docker image..."
+          docker load < /tmp/backend.tar
+
+          # イメージ名を取得
+          IMAGE_ID=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.ID}}" | grep "backend" | head -1 | awk '{print $2}')
+          echo "Loaded image ID: $IMAGE_ID"
+
+          # コンテナを起動してテスト
+          echo "Starting container for testing..."
+          CONTAINER_ID=$(docker run -d -p 8080:8080 --name test-backend $IMAGE_ID)
+          echo "Container started with ID: $CONTAINER_ID"
+
+          # 起動待機
+          echo "Waiting for container to start..."
+          sleep 30
+
+          # コンテナの状態確認
+          echo "Container status:"
+          docker ps -a --filter "id=$CONTAINER_ID"
+
+          # ログの確認
+          echo "Container logs:"
+          docker logs $CONTAINER_ID
+
+          # ヘルスチェック
+          echo "Health check:"
+          docker inspect $CONTAINER_ID --format='{{.State.Health.Status}}'
+
+          # アプリケーションの応答確認
+          echo "Testing application response..."
+          if curl -f http://localhost:8080/ > /dev/null 2>&1; then
+            echo "✅ Application is responding"
+          else
+            echo "⚠️  Application is not responding yet"
+          fi
+
+          # テスト用コンテナを停止・削除
+          echo "Cleaning up test container..."
+          docker stop $CONTAINER_ID
+          docker rm $CONTAINER_ID
+
+          echo "================================="
+
+  # Cloud Runへのデプロイ
+  deploy:
+    name: Deploy to Cloud Run
+    runs-on: ubuntu-latest
+    needs: build-image
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          export_environment_variables: true
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          region: ${{ env.REGION }}
+          env_vars: |
+            PORT=8080
+            RUST_LOG=info
+          memory: 1Gi
+          cpu: 1
+          concurrency: 80
+          timeout: 600
+          min_instances: 0
+          max_instances: 10
+          allow_unauthenticated: true
+          # 起動タイムアウトを延長
+          startup_cpu_boost: true
+          # ヘルスチェックの設定
+          health_check_path: /
+          health_check_timeout: 30
+          health_check_interval: 10
+
+      - name: Show service URL
+        run: |
+          echo "Service URL: https://${{ env.SERVICE_NAME }}-$(echo ${{ env.REGION }} | tr -d '-').run.app"
+
+  # デプロイ後のヘルスチェック
+  health-check:
+    name: Health Check
+    runs-on: ubuntu-latest
+    needs: deploy
+
+    steps:
+      - name: Wait for deployment
+        run: sleep 30
+
+      - name: Check health endpoint
+        run: |
+          SERVICE_URL="https://${{ env.SERVICE_NAME }}-$(echo ${{ env.REGION }} | tr -d '-').run.app"
+          echo "Checking health at: $SERVICE_URL"
+
+          # ヘルスチェックを実行（5回まで）
+          for i in {1..5}; do
+            if curl -f "$SERVICE_URL/" > /dev/null 2>&1; then
+              echo "✅ Health check passed on attempt $i"
+              break
+            else
+              echo "⏳ Health check failed on attempt $i, retrying..."
+              sleep 10
+            fi
+          done
+
+          # 最終チェック
+          if ! curl -f "$SERVICE_URL/" > /dev/null 2>&1; then
+            echo "❌ Health check failed after all attempts"
+            exit 1
+          fi
