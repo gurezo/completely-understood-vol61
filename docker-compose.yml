@@ -1,0 +1,17 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - RUST_LOG=info
+    restart: unless-stopped
+    healthcheck:
+      # test: ["CMD", "curl", "-f", "http://localhost:8080/api/double"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/double", "-X", "POST", "-H", "Content-Type: application/json", "-d", '{"value": 1}']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
