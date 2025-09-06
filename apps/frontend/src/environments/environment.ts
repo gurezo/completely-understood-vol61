@@ -1,4 +1,6 @@
 export const environment = {
   production: false,
-  backendUrl: 'https://backend-728967511901.asia-northeast1.run.app',
+  backendUrl:
+    (window as any)['env']?.['BACKEND_URL'] ||
+    'https://backend-244lwdt5ta-an.a.run.app',
 };
