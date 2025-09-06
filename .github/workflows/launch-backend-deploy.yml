@@ -1,0 +1,19 @@
+# .github/workflows/launch-backend-deploy.yml （master ブランチ）
+name: Launch backend deploy (remote)
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options: [staging, production]
+
+jobs:
+  call:
+    uses: gurezo/completely-understood-vol61/.github/workflows/deploy-backend.yml@feature/cloud-functions
+    with:
+      environment: ${{ inputs.environment }}
+    secrets: inherit

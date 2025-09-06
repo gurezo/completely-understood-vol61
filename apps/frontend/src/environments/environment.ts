@@ -1,5 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl:
-    'http://localhost:5001/completely-understood-vo-a0f23/us-central1/api',
+  backendUrl: 'https://backend-728967511901.asia-northeast1.run.app',
 };
