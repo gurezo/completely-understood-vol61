@@ -1,0 +1,95 @@
+# .github/workflows/deploy-backend.yml （feature/cloud-functions ブランチ）
+name: Deploy backend to Cloud Run
+
+on:
+  push:
+    branches: [main, develop, 'feature/**']
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options: [staging, production]
+  # ★ 追加：reusable workflow として呼び出せるようにする
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+    secrets:
+      GCP_PROJECT_ID:
+        required: true
+      GCP_WIF_PROVIDER:
+        required: true
+      GCP_WIF_SERVICE_ACCOUNT:
+        required: true
+
+env:
+  REGION: asia-northeast1
+  REPOSITORY: backend
+  SERVICE_NAME: backend
+  IMAGE_NAME: asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/backend/backend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Debug trigger info
+        run: |
+          echo "event_name=${{ github.event_name }}"
+          echo "ref=${{ github.ref }}"
+          echo "ref_name=${{ github.ref_name }}"
+          echo "repo=${{ github.repository }}"
+          echo "actor=${{ github.actor }}"
+          echo "env-input=${{ inputs.environment || 'N/A' }}"
+
+      - name: Preflight: check required secrets
+        run: |
+          test -n "${{ secrets.GCP_PROJECT_ID }}" || (echo "GCP_PROJECT_ID is empty"; exit 1)
+          test -n "${{ secrets.GCP_WIF_PROVIDER }}" || (echo "GCP_WIF_PROVIDER is empty"; exit 1)
+          test -n "${{ secrets.GCP_WIF_SERVICE_ACCOUNT }}" || (echo "GCP_WIF_SERVICE_ACCOUNT is empty"; exit 1)
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}    # 例: projects/728967511901/locations/global/workloadIdentityPools/github-pool-vol61/providers/github-provider-vol61
+          service_account: ${{ secrets.GCP_WIF_SERVICE_ACCOUNT }}        # 例: nx-deployer@completely-understood-vo-a0f23.iam.gserviceaccount.com
+          token_format: 'access_token'
+          access_token_scopes: 'https://www.googleapis.com/auth/cloud-platform'
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Docker login to Artifact Registry
+        run: |
+          echo "${{ steps.auth.outputs.access_token }}" | \
+          docker login -u oauth2accesstoken --password-stdin https://asia-northeast1-docker.pkg.dev
+
+      - name: Build image
+        run: |
+          docker build -t $IMAGE_NAME:$(git rev-parse --short HEAD) -f Dockerfile .
+
+      - name: Push image
+        run: |
+          docker push $IMAGE_NAME:$(git rev-parse --short HEAD)
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image $IMAGE_NAME:$(git rev-parse --short HEAD) \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated
