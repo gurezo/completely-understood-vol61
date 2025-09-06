@@ -16,11 +16,17 @@ COPY Cargo.toml Cargo.lock ./
 # バックエンドプロジェクトのCargo.tomlをコピー
 COPY apps/backend/Cargo.toml ./apps/backend/Cargo.toml
 
+# 依存関係を先にビルド（キャッシュ効率化）
+RUN mkdir -p apps/backend/src && \
+    echo "fn main() {}" > apps/backend/src/main.rs && \
+    cargo build --release --bin backend && \
+    rm -rf apps/backend/src
+
 # ソースコードをコピー
 COPY apps/backend/src ./apps/backend/src
 
-# リリースビルドを実行
-RUN cargo build --release --bin backend
+# リリースビルドを実行（最適化フラグを追加）
+RUN cargo build --release --bin backend --config 'profile.release.opt-level = "z"'
 
 # 実行用イメージ
 FROM --platform=linux/amd64 debian:bookworm-slim
@@ -50,9 +56,9 @@ USER appuser
 # ポートを公開
 EXPOSE 8080
 
-# ヘルスチェックを一時的に無効化
-# HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
-#     CMD curl -f http://localhost:8080/ || exit 1
+# ヘルスチェックを有効化
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8080/ || exit 1
 
 # シンプルな起動コマンド
 CMD ["/app/backend"]
