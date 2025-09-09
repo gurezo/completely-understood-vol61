@@ -1,8 +1,8 @@
 {
   "name": "backend",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "application",
   "sourceRoot": "apps/backend/src",
+  "projectType": "application",
   "targets": {
     "build": {
       "executor": "@nxrs/cargo:build",
@@ -13,15 +13,20 @@
         "production": {
           "profile": "release"
         }
-      }
+      },
+      "parallelism": true
     },
     "serve": {
       "executor": "@nxrs/cargo:run",
-      "options": {}
+      "options": {},
+      "configurations": {},
+      "parallelism": true
     },
     "test": {
       "executor": "@nxrs/cargo:test",
-      "options": {}
+      "options": {},
+      "configurations": {},
+      "parallelism": true
     },
     "lint": {
       "executor": "@nxrs/cargo:clippy",
@@ -29,6 +34,34 @@
         "fix": false,
         "failOnWarnings": true,
         "noDeps": true
+      },
+      "configurations": {},
+      "parallelism": true
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t backend:latest .",
+        "cwd": "apps/backend"
+      }
+    },
+    "docker:run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker run -p 8080:8080 backend:latest",
+        "cwd": "apps/backend"
+      }
+    },
+    "deploy:staging": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "gcloud run deploy backend --image gcr.io/${GCP_PROJECT_ID}/backend:latest --region asia-northeast1 --platform managed --allow-unauthenticated --memory 512Mi --cpu 1 --concurrency 80 --timeout 300 --min-instances 0 --max-instances 10",
+        "cwd": "apps/backend"
+      },
+      "configurations": {
+        "production": {
+          "command": "gcloud run deploy backend --image gcr.io/${GCP_PROJECT_ID}/backend:latest --region asia-northeast1 --platform managed --allow-unauthenticated --memory 1Gi --cpu 2 --concurrency 100 --timeout 300 --min-instances 1 --max-instances 20"
+        }
       }
     }
   },

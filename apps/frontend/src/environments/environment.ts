@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl:
-    'http://localhost:5001/completely-understood-vo-a0f23/us-central1/api',
+  backendUrl:
+    (window as any)['env']?.['BACKEND_URL'] ||
+    'https://backend-244lwdt5ta-an.a.run.app',
 };
