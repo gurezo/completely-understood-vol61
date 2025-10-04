@@ -2,7 +2,14 @@
   "name": "@completely-understood-vol61/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "format": "nx format:write",
+    "format:check": "nx format:check",
+    "lint:all": "nx run-many --target=lint --all --parallel=3",
+    "test:all": "nx run-many --target=test --all --parallel=3",
+    "build:all": "nx run-many --target=build --all --parallel=3",
+    "ci": "nx run-many --target=lint --all --parallel=3 && nx format:check && nx run-many --target=test --all --parallel=3 --configuration=ci && nx run-many --target=build --all --parallel=3 --configuration=production"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "20.3.3",

@@ -1,4 +1,4 @@
-name: CI - Test and Build
+name: CI - Optimized
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ env:
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
 jobs:
-  test-and-build:
+  ci:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,19 +29,26 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: 'pnpm-lock.yaml'
 
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint frontend
-        run: pnpm nx lint frontend
+      - name: Nx Cloud setup
+        uses: nrwl/nx-set-shas@v4
 
-      - name: Test frontend
-        run: pnpm nx test frontend --watch=false --browsers=ChromeHeadless
+      - name: Lint all projects
+        run: pnpm nx run-many --target=lint --all --parallel=3
 
-      - name: Build frontend
-        run: pnpm nx build frontend --configuration=production
-        env:
-          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+      - name: Format check
+        run: pnpm nx format:check
 
-      - name: Build backend
-        run: pnpm nx build backend --configuration=production
+      - name: Test all projects
+        run: pnpm nx run-many --target=test --all --parallel=3 --configuration=ci
+
+      - name: Build all projects
+        run: pnpm nx run-many --target=build --all --parallel=3 --configuration=production

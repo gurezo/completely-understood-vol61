@@ -1,13 +1,10 @@
-name: Deploy to Firebase
+name: Deploy - Optimized
 
 on:
   push:
     branches:
       - main
-      - feature/cloud-functions
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -34,7 +31,6 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: latest
-          run_install: false
 
       # Node.js のセットアップ
       - name: Setup Node.js
@@ -93,26 +89,9 @@ jobs:
           gcloud services enable run.googleapis.com || echo "Cloud Run API already enabled"
           gcloud services enable cloudbuild.googleapis.com || echo "Cloud Build API already enabled"
 
-          # プロジェクトの権限確認
-          echo "Checking project permissions..."
-          gcloud projects describe ${{ secrets.GCP_PROJECT_ID }} || echo "Project access verified"
-
       # Docker のセットアップ
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      # プロジェクトIDの確認
-      - name: Verify project ID
-        run: |
-          echo "GCP_PROJECT_ID length: ${#GCP_PROJECT_ID}"
-          echo "GCP_PROJECT_ID value: '$GCP_PROJECT_ID'"
-          if [ -z "$GCP_PROJECT_ID" ]; then
-            echo "❌ GCP_PROJECT_ID is empty or not set"
-            exit 1
-          fi
-          echo "✅ GCP_PROJECT_ID is properly set"
-        env:
-          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
 
       # Docker イメージのビルドとプッシュ
       - name: Build and push Docker image
@@ -175,7 +154,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: deploy-backend
     env:
-      NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
       FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
       BACKEND_URL: ${{ needs.deploy-backend.outputs.backend-url }}
     steps:
@@ -189,7 +167,6 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: latest
-          run_install: false
 
       # Node.js のセットアップ
       - name: Setup Node.js
@@ -203,9 +180,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Nx Cloud の設定
-      - name: Set Nx Cloud SHAs
-        uses: nrwl/nx-set-shas@v4
 
       # フロントエンドの環境変数ファイルを更新
       - name: Update frontend environment
