@@ -134,7 +134,7 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "accessToken": "<YOUR_NX_CLOUD_TOKEN>",
+        "accessToken": "${NX_CLOUD_ACCESS_TOKEN}",
         "canTrackAnalytics": true,
         "showUsageWarnings": true
       }

@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl:
-    'https://us-central1-completely-understood-vo-a0f23.cloudfunctions.net/api',
+  backendUrl:
+    (window as any)['env']?.['BACKEND_URL'] ||
+    'https://backend-244lwdt5ta-an.a.run.app',
 };

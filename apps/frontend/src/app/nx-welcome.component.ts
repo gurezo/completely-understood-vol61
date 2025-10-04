@@ -34,7 +34,7 @@ export class NxWelcomeComponent {
   sendValue() {
     if (this.inputValue !== null) {
       this.http
-        .post<{ result: number }>(`${environment.apiUrl}/double`, {
+        .post<{ result: number }>(`${environment.backendUrl}/api/double`, {
           value: this.inputValue,
         })
         .subscribe((response) => {

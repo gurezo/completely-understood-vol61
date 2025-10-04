@@ -1,48 +1,210 @@
-name: Deploy to Firebase
+name: Deploy - Optimized
 
 on:
   push:
-    branches: [main, feature/deploy-frontend]
-  pull_request:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
 
-env:
-  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
-  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
-  build-and-deploy:
+  deploy-backend:
     runs-on: ubuntu-latest
-
+    env:
+      NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      GCP_REGION: asia-northeast1
+      SERVICE_NAME: backend
+    outputs:
+      backend-url: ${{ steps.get-backend-url.outputs.url }}
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # pnpm のセットアップ (Node.jsも一緒にセットアップ)
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      # Node.js のセットアップ
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
 
+      # Rust のセットアップ
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      # 依存関係のインストール
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Nx Cloud の設定
+      - name: Set Nx Cloud SHAs
+        uses: nrwl/nx-set-shas@v4
+
+      # バックエンドのビルド
+      - name: Build backend
+        run: pnpm nx build backend --configuration=production
+
+      # Google Cloud CLI のセットアップ
+      - name: Setup Google Cloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      # Google Cloud 認証 (Workload Identity Federation)
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_WIF_SERVICE_ACCOUNT }}
+
+      # 認証状態の確認
+      - name: Verify authentication
+        run: |
+          # 現在のプロジェクトを確認
+          echo "Current project:"
+          gcloud config get-value project
+
+          # 認証状態を確認
+          echo "Authentication status:"
+          gcloud auth list
+
+          # 必要なAPIを有効化（エラーハンドリング付き）
+          echo "Enabling required APIs..."
+          gcloud services enable artifactregistry.googleapis.com || echo "Artifact Registry API already enabled"
+          gcloud services enable run.googleapis.com || echo "Cloud Run API already enabled"
+          gcloud services enable cloudbuild.googleapis.com || echo "Cloud Build API already enabled"
+
+      # Docker のセットアップ
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Docker イメージのビルドとプッシュ
+      - name: Build and push Docker image
+        run: |
+          # プロジェクトIDを取得し、改行文字を削除
+          PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}"
+          PROJECT_ID=$(echo "$PROJECT_ID" | tr -d '\n\r')
+
+          # Dockerタグを構築（Artifact Registry用）
+          DOCKER_TAG="${GCP_REGION}-docker.pkg.dev/${PROJECT_ID}/backend/backend:latest"
+          echo "Building Docker image with tag: $DOCKER_TAG"
+
+          # DockerをArtifact Registryに認証
+          echo "Configuring Docker authentication for Artifact Registry..."
+          gcloud auth configure-docker ${GCP_REGION}-docker.pkg.dev --quiet
+
+          # Artifact Registryの権限を確認
+          echo "Checking Artifact Registry permissions..."
+          gcloud auth list
+
+          # サービスアカウントの権限確認
+          echo "Checking service account permissions..."
+          gcloud projects get-iam-policy ${{ secrets.GCP_PROJECT_ID }} --flatten="bindings[].members" --format="table(bindings.role)" --filter="bindings.members:${{ secrets.GCP_WIF_SERVICE_ACCOUNT }}" || echo "Permission check completed"
+
+          # Dockerイメージをビルド
+          docker build --platform linux/amd64 -t "$DOCKER_TAG" .
+
+          # Artifact Registryにプッシュ
+          docker push "$DOCKER_TAG"
+
+          # 環境変数として設定
+          echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_ENV
+
+      # Cloud Run へのデプロイ
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image ${{ env.DOCKER_TAG }} \
+            --region ${{ env.GCP_REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --memory 512Mi \
+            --cpu 1 \
+            --concurrency 80 \
+            --timeout 300 \
+            --min-instances 0 \
+            --max-instances 10 \
+            --port 8080 \
+            --env-vars-file cors-env.yaml
+
+      # バックエンドURLの取得
+      - name: Get backend URL
+        id: get-backend-url
+        run: |
+          BACKEND_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} --region ${{ env.GCP_REGION }} --format="value(status.url)")
+          echo "url=$BACKEND_URL" >> $GITHUB_OUTPUT
+          echo "Backend URL: $BACKEND_URL"
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    needs: deploy-backend
+    env:
+      FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+      BACKEND_URL: ${{ needs.deploy-backend.outputs.backend-url }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # pnpm のセットアップ (Node.jsも一緒にセットアップ)
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: latest
 
+      # Node.js のセットアップ
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
+
+      # 依存関係のインストール
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
-      - name: Build frontend
-        run: npx nx build frontend --prod
-        env:
-          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
-      - name: Deploy to Firebase
-        if: github.ref == 'refs/heads/main'
+      # フロントエンドの環境変数ファイルを更新
+      - name: Update frontend environment
         run: |
-          npm install -g firebase-tools
-          firebase deploy --token "$FIREBASE_TOKEN" --only hosting
+          ENV_FILE="apps/frontend/src/assets/env.js"
+          cat > "$ENV_FILE" << EOF
+          // 環境変数ファイル
+          // このファイルはビルド時に動的に生成されます
+          window['env'] = {
+            BACKEND_URL: '${{ env.BACKEND_URL }}'
+          };
+          EOF
+          echo "Updated $ENV_FILE with backend URL: ${{ env.BACKEND_URL }}"
+
+      # フロントエンドのビルド
+      - name: Build frontend
+        run: pnpm nx build frontend --configuration=production
+
+      # Firebase CLI のインストール
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      # Firebase 認証とデプロイ
+      - name: Deploy to Firebase
+        run: |
+          firebase deploy --only hosting --project ${{ env.FIREBASE_PROJECT_ID }} --token ${{ secrets.FIREBASE_TOKEN }}
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
