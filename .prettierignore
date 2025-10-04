@@ -4,3 +4,9 @@
 /.nx/cache
 /.nx/workspace-data
 .angular
+
+# Exclude specific files from format:check
+.github/workflows/deploy.yml
+apps/backend/cloud-run.yaml
+cors-env.yaml
+docker-compose.yml
