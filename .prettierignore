@@ -10,3 +10,4 @@
 apps/backend/cloud-run.yaml
 cors-env.yaml
 docker-compose.yml
+pnpm-lock.yaml
